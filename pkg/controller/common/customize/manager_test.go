@@ -26,7 +26,6 @@ import (
 	"metacontroller/pkg/dynamic/discovery"
 	dynamicinformer "metacontroller/pkg/dynamic/informer"
 
-	. "metacontroller/pkg/internal/testutils/controllers"
 	. "metacontroller/pkg/internal/testutils/hooks"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
