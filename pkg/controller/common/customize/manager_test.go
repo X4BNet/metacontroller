@@ -41,10 +41,6 @@ type nilCustomizableController struct {
 }
 
 func (cc *nilCustomizableController) GetCustomizeHook() *v1alpha1.Hook {
-	return nil
-}
-
-func (cc *nilCustomizableController) GetCustomizeHook() *v1alpha1.Hook {
 	url := "fake"
 	return &v1alpha1.Hook{
 		Webhook: &v1alpha1.Webhook{
