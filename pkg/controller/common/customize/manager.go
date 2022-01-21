@@ -216,6 +216,7 @@ func (rm *Manager) onRelatedDelete(obj interface{}) {
 
 func (rm *Manager) notifyRelatedParents(related ...*unstructured.Unstructured) {
 	parents := rm.findRelatedParents(related...)
+	fmt.Printf("parents %+v\n", parents)
 	if len(parents) == 0 {
 		return
 	}
@@ -304,8 +305,6 @@ func (rm *Manager) matchesRelatedRule(parent, related *unstructured.Unstructured
 			return false, err
 		}
 		relatedLabels := related.GetLabels()
-		fmt.Printf("relatedLabels %+v\n", relatedLabels)
-		fmt.Printf("selector %+v\n", selector)
 		return selector.Matches(labels.Set(relatedLabels)), nil
 	case selectByNamespaceAndNames:
 		if parentResource.Namespaced {
