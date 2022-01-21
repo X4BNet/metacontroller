@@ -297,15 +297,16 @@ func (rm *Manager) matchesRelatedRule(parent, related *unstructured.Unstructured
 
 	selectionType, err := determineSelectionType(relatedRule)
 
-	fmt.Printf("%+v\n", selectionType)
-
 	switch selectionType {
 	case selectByLabels:
 		selector, err := toSelector(relatedRule.LabelSelector)
 		if err != nil {
 			return false, err
 		}
-		return selector.Matches(labels.Set(related.GetLabels())), nil
+		relatedLabels := related.GetLabels()
+		fmt.Printf("relatedLabels %+v\n", relatedLabels)
+		fmt.Printf("selector %+v\n", selector)
+		return selector.Matches(labels.Set(relatedLabels)), nil
 	case selectByNamespaceAndNames:
 		if parentResource.Namespaced {
 			parentNamespace := parent.GetNamespace()
