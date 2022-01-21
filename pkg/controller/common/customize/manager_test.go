@@ -37,9 +37,6 @@ var fakeEnqueueParent = func(obj interface{}) {}
 var dynClient = dynamicclientset.Clientset{}
 var dynInformers = dynamicinformer.SharedInformerFactory{}
 
-type fakeCustomizableController struct {
-}
-
 func (cc *fakeCustomizableController) GetCustomizeHook() *v1alpha1.Hook {
 	return nil
 }
