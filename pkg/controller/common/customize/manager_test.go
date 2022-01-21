@@ -26,6 +26,7 @@ import (
 	"metacontroller/pkg/dynamic/discovery"
 	dynamicinformer "metacontroller/pkg/dynamic/informer"
 
+	. "metacontroller/pkg/internal/testutils/controllers"
 	. "metacontroller/pkg/internal/testutils/hooks"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -37,11 +38,14 @@ var fakeEnqueueParent = func(obj interface{}) {}
 var dynClient = dynamicclientset.Clientset{}
 var dynInformers = dynamicinformer.SharedInformerFactory{}
 
-func (cc *fakeCustomizableController) GetCustomizeHook() *v1alpha1.Hook {
+type nilCustomizableController struct {
+}
+
+func (cc *nilCustomizableController) GetCustomizeHook() *v1alpha1.Hook {
 	return nil
 }
 
-func (cc *fakeCustomizableController) GetCustomizeHook() *v1alpha1.Hook {
+func (cc *nilCustomizableController) GetCustomizeHook() *v1alpha1.Hook {
 	url := "fake"
 	return &v1alpha1.Hook{
 		Webhook: &v1alpha1.Webhook{
@@ -63,7 +67,7 @@ var neGroupKindMap = common.GroupKindMap{
 var customizeManagerWithNilController, _ = NewCustomizeManager(
 	"test",
 	fakeEnqueueParent,
-	&fakeCustomizableController{},
+	&nilCustomizableController{},
 	&dynClient,
 	&dynInformers,
 	make(common.InformerMap),
@@ -75,7 +79,7 @@ var customizeManagerWithNilController, _ = NewCustomizeManager(
 var customizeManagerWithFakeController, _ = NewCustomizeManager(
 	"test",
 	fakeEnqueueParent,
-	&FakeCustomizableController{},
+	&nilCustomizableController{},
 	&dynClient,
 	&dynInformers,
 	make(common.InformerMap),
@@ -87,7 +91,7 @@ var customizeManagerWithFakeController, _ = NewCustomizeManager(
 var customizeManagerWithFakeControllerAndGroupKindMap, _ = NewCustomizeManager(
 	"test",
 	fakeEnqueueParent,
-	&fakeCustomizableController{},
+	&nilCustomizableController{},
 	&dynClient,
 	&dynInformers,
 	make(common.InformerMap),
