@@ -41,6 +41,13 @@ type nilCustomizableController struct {
 }
 
 func (cc *nilCustomizableController) GetCustomizeHook() *v1alpha1.Hook {
+	return nil
+}
+
+type fakeCustomizableController struct {
+}
+
+func (cc *fakeCustomizableController) GetCustomizeHook() *v1alpha1.Hook {
 	url := "fake"
 	return &v1alpha1.Hook{
 		Webhook: &v1alpha1.Webhook{
@@ -74,7 +81,7 @@ var customizeManagerWithNilController, _ = NewCustomizeManager(
 var customizeManagerWithFakeController, _ = NewCustomizeManager(
 	"test",
 	fakeEnqueueParent,
-	&nilCustomizableController{},
+	&FakeCustomizableController{},
 	&dynClient,
 	&dynInformers,
 	make(common.InformerMap),
@@ -86,7 +93,7 @@ var customizeManagerWithFakeController, _ = NewCustomizeManager(
 var customizeManagerWithFakeControllerAndGroupKindMap, _ = NewCustomizeManager(
 	"test",
 	fakeEnqueueParent,
-	&nilCustomizableController{},
+	&fakeCustomizableController{},
 	&dynClient,
 	&dynInformers,
 	make(common.InformerMap),
