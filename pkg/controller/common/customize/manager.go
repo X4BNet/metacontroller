@@ -216,7 +216,6 @@ func (rm *Manager) onRelatedDelete(obj interface{}) {
 
 func (rm *Manager) notifyRelatedParents(related ...*unstructured.Unstructured) {
 	parents := rm.findRelatedParents(related...)
-	fmt.Printf("parents %+v\n", parents)
 	if len(parents) == 0 {
 		return
 	}
@@ -370,7 +369,7 @@ func (rm *Manager) GetRelatedObjects(parent *unstructured.Unstructured) (common.
 				return nil, err
 			}
 			var all []*unstructured.Unstructured
-			if parentResource.Namespaced {
+			if parentResource.Namespaced && relatedRule.Namespace != "*" {
 				all, err = informer.Lister().Namespace(parentNamespace).List(selector)
 			} else {
 				all, err = informer.Lister().List(selector)
@@ -382,10 +381,15 @@ func (rm *Manager) GetRelatedObjects(parent *unstructured.Unstructured) (common.
 			childMap.InsertAll(parent, all)
 
 		case selectByNamespaceAndNames:
-			if parentResource.Namespaced && len(relatedRule.Namespace) != 0 && parentNamespace != relatedRule.Namespace {
+			if parentResource.Namespaced && len(relatedRule.Namespace) != 0 && parentNamespace != relatedRule.Namespace && relatedRule.Namespace != "*" {
 				return nil, fmt.Errorf("requested related object namespace %s differs from parent object namespace %s", relatedRule.Namespace, parentNamespace)
 			}
-			all, err := listObjects(labels.Everything(), relatedRule.Namespace, informer)
+			var all []*unstructured.Unstructured
+			if relatedRule.Namespace == "*" {
+				all, err = informer.Lister().List(labels.Everything())
+			} else {
+				all, err = listObjects(labels.Everything(), relatedRule.Namespace, informer)
+			}
 			if err != nil {
 				return nil, fmt.Errorf("can't list %v related objects: %w", relatedClient.Kind, err)
 			}
