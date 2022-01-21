@@ -297,6 +297,8 @@ func (rm *Manager) matchesRelatedRule(parent, related *unstructured.Unstructured
 
 	selectionType, err := determineSelectionType(relatedRule)
 
+	fmt.Printf("%+v\n", selectionType)
+
 	switch selectionType {
 	case selectByLabels:
 		selector, err := toSelector(relatedRule.LabelSelector)
